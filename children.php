@@ -103,27 +103,38 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form role="form">
+              <?php require_once 'process.php'; ?>
+              <?php if(isset($_SESSION['message'])): ?>
+                <div class="alert alert-<? $_SESSION['msg_type']?>">
+                  <?php 
+                    echo $_SESSION['message'];
+                    unset($_SESSION['message']);
+                  ?>
+                </div>
+              <?php 
+                $mysqli = new mysqli('localhost', 'root', '', 'household') or die(mysqli_error($mysqli));
+                $result = $mysqli->query("SELECT * FROM children WHERE children.creator = 3 AND children.active = 1") or die($mysqli->error);
+              ?>
+              <form role="form" action="" method="POST">
                 <div class="card-body">
                   <div class="form-group">
                     <label for="firstname">First name</label>
-                    <input type="text" class="form-control" id="firstname" placeholder="eg John">
+                    <input type="text" class="form-control" name="firstname" placeholder="eg John">
                   </div>
                   <div class="form-group">
                     <label for="lastname">Last name</label>
-                    <input type="text" class="form-control" id="lastname" placeholder="eg Smith">
+                    <input type="text" class="form-control" name="lastname" placeholder="eg Smith">
                   </div>
                   <div class="form-group">
                     <label for="dob">Date of Birth</label>
-                    <input type="date" class="form-control" id="dob">
+                    <input type="date" class="form-control" name="dob">
                   </div>
-                 
-              
                 </div>
-                <!-- /.card-body -->
+                
+                <input type="hidden" name="creator" value="3">
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <button type="submit" name="save" class="btn btn-primary">Submit</button>
                 </div>
               </form>
             </div>
@@ -158,60 +169,20 @@
                       <th style="width: 5%">Delete</th>
                     </tr>
                   </thead>
+                                   
                   <tbody>
+                  <?php
+                    while ($row = $result->fetch_assoc()): ?>
                     <tr>
-                      <td>1.</td>
-                      <td>Mpumelelo</td>
-                      <td>
-                        Nyathi
-                      </td>
-                      <td>11 Dec 1986</td>
-                      <td class="text-center"><button class="fas fa-edit text-info crud-btn"></button></td>
-                      <td class="text-center"><button class="fas fa-trash-alt text-danger crud-btn"></button></td>
-                      
+                      <td><?php echo $row['id'] ?>.</td>
+                      <td><?php echo $row['firstname'] ?></td>
+                      <td><?php echo $row['lastname'] ?></td>
+                      <td><?php echo $row['dob'] ?></td>                      
+                      <td class="text-center"><a href="process.php?edit=<?php echo $row['id'] ?>" class="fas fa-edit text-info crud-btn"></a></td>
+                      <td class="text-center"><a href="process.php?delete=<?php echo $row['id'] ?>" class="fas fa-trash-alt text-danger crud-btn"></a></td>                      
                     </tr>
-                    <tr>
-                      <td>2.</td>
-                      <td>Mpumelelo</td>
-                      <td>
-                        Nyathi
-                      </td>
-                      <td>11 Dec 1986</td>
-                      <td class="text-center"><button class="fas fa-edit text-info crud-btn"></button></td>
-                      <td class="text-center"><button class="fas fa-trash-alt text-danger crud-btn"></button></td>
-                    </tr>
-                    <tr>
-                      <td>3.</td>
-                      <td>Mpumelelo</td>
-                      <td>
-                        Nyathi
-                      </td>
-                      <td>11 Dec 1986</td>
-                      <td class="text-center"><button class="fas fa-edit text-info crud-btn"></button></td>
-                      <td class="text-center"><button class="fas fa-trash-alt text-danger crud-btn"></button></td>
-                    </tr>
-                    <tr>
-                    <td>4.</td>
-                    <td>Tinashe</td>
-                      <td>
-                        Dube
-                      </td>
-                      <td>11 Dec 1986</td>
-                      <td class="text-center"><button class="fas fa-edit text-info crud-btn"></button></td>
-                      <td class="text-center"><button class="fas fa-trash-alt text-danger crud-btn"></button></td>
-                    </tr>
-                    <tr>
-                    <td>5.</td>
-                    <td>Tinashe</td>
-                      <td>
-                        Dube
-                      </td>
-                      <td>11 Dec 1986</td>
-                      <td class="text-center"><button class="fas fa-edit text-info crud-btn"></button></td>
-                      <td class="text-center"><button class="fas fa-trash-alt text-danger crud-btn"></button></td>
-                    </tr>
-                    
-                  </tbody>
+                    <?php endwhile; ?>                    
+                </tbody>
                 </table>
               </div>
               <!-- /.card-body -->
@@ -229,9 +200,9 @@
   <!-- /.content-wrapper -->
   <footer class="main-footer" >
     <div class="float-right d-none d-sm-block">
-      <b>Version</b> 3.0.5
+      <b>Version</b> 1.0.0
     </div>
-    <strong>Copyright &copy; 2014-2019 <a href="http://adminlte.io">AdminLTE.io</a>.</strong> All rights
+    <strong>Copyright &copy; 2021 <a href="#">Housing</a>.</strong> All rights
     reserved.
   </footer>
 
@@ -243,20 +214,6 @@
 </div>
 <!-- ./wrapper -->
 
-<!-- jQuery -->
-<script src="../../plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- bs-custom-file-input -->
-<script src="../../plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
-<!-- AdminLTE App -->
-<script src="../../dist/js/adminlte.min.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="../../dist/js/demo.js"></script>
-<script type="text/javascript">
-$(document).ready(function () {
-  bsCustomFileInput.init();
-});
-</script>
+
 </body>
 </html>
