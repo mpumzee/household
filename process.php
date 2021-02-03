@@ -1,11 +1,17 @@
 <?php
 session_start();
+
 $firstname = '';
 $lastname = '';
 $dob = '';
 $update = false;
 $id = 0;
-$mysqli = new mysqli('localhost', 'root', '', 'household') or die(mysqli_error($mysqli));
+$error_msg = '';
+$logged_in = false;
+$user_id = 0;
+$mysqli = new mysqli('localhost', 'id16075482_root', '6tz]d}~hdBe{Ld7B', 'id16075482_household') or die(mysqli_error($mysqli));
+
+
 
 if (isset($_POST['save'])) {
     $firstname = $_POST['firstname'];
@@ -48,12 +54,54 @@ if (isset($_POST['register'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
-    if($password == $confirm_password){
-        $mysqli->query("INSERT INTO users (fulname, email, password) VALUES('$fullname','$email','$password') ") 
-    or die($mysqli->error);
+    $result = $mysqli->query("SELECT id FROM users WHERE email = '$email' ");
+    $row = $result->fetch_array();    
+    $user_exists = $row['id'] == null ? false : true;
+    if($password != $confirm_password){
+        $_SESSION['error_msg'] = "Passwords do not match";
     }
+    else if($user_exists){
+        $_SESSION['error_msg'] = "User already exists";
+    }
+    else{
+        $mysqli->query("INSERT INTO users (fullname, email, password) VALUES('$fullname','$email','$password') ") 
+    or die($mysqli->error);
+    $_SESSION['fullname'] = $fullname;
+    header("location:login.php");
+    }   
     
+}
 
-    $_SESSION['message'] = "Record Saved Successfully";
-    $_SESSION['msg_type'] = "success";
+/* Login */
+if (isset($_POST['login'])) {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $result = $mysqli->query("SELECT * FROM users WHERE email = '$email' AND password = '$password'")
+    or die($mysqli->error);
+    $row = $result->fetch_array();       
+    $user_exists = $row == null ? false : true;  
+    // var_dump($row == null); exit(); 
+    if($row != null){
+        $_SESSION['user_id'] = $row['id'];        
+        $_SESSION['logged_in'] = true;
+        $_SESSION['fullname'] = $row['fullname'];
+        header("location:children.php");
+    }
+    else{                 
+        $_SESSION['error_msg'] = "Incorrect login details!";
+        header("location:login.php");        
+    }
+}   
+
+
+/* Logout */
+if (isset($_GET['logout'])) {
+    $logout = $_GET['logout'];
+    if ($logout == true) {
+        session_unset();
+        $_SESSION['error_msg'] = "";
+        header("location:login.php");
+    }
+
+    
 }

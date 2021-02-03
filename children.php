@@ -1,3 +1,4 @@
+<?php require_once 'process.php'; ?> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,6 +22,12 @@
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
 <body class="hold-transition sidebar-mini">
+
+<?php 
+  if (!$_SESSION['logged_in']) {
+      header("location:login.php");
+    }
+?>
 <div class="wrapper">
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -28,10 +35,10 @@
     <ul class="navbar-nav ml-auto">
       <!-- Messages Dropdown Menu -->
       <li class="nav-item ">
-          <span class="nav-link">Mpumelelo Nyathi</span>               
+          <span class="nav-link"><?=$_SESSION['fullname']?></span>               
       </li>
-      <li class="nav-item ">
-        <a class="nav-link text-info" href="#">
+      <li class="nav-item">
+        <a class="nav-link text-info" href="process.php?logout=true">
             Logout
         </a>
         
@@ -103,7 +110,7 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <?php require_once 'process.php'; ?> 
+              
               <?php if (isset($_GET['edit'])) {
                 $id = $_GET['edit'];    
                 $result = $mysqli->query("SELECT * FROM children WHERE id = $id") or die($mysqli->error);    
@@ -123,8 +130,11 @@
                 </div>
                 <?php endif ?>
               <?php 
-                $mysqli = new mysqli('localhost', 'root', '', 'household') or die(mysqli_error($mysqli));
-                $result = $mysqli->query("SELECT * FROM children WHERE children.creator = 3 AND children.active = 1") or die($mysqli->error);
+                $mysqli = new mysqli('localhost', 'id16075482_root', '6tz]d}~hdBe{Ld7B', 'id16075482_household') or die(mysqli_error($mysqli));
+                // $mysqli = new mysqli('localhost', 'root', '', 'household') or die(mysqli_error($mysqli));
+                $user_id = $_SESSION['user_id'];
+                // print("The user id is" . $user_id);
+                $result = $mysqli->query("SELECT * FROM children WHERE children.creator = $user_id AND children.active = 1") or die($mysqli->error);
               ?>
               <form role="form" action="" method="POST">
               <input type="hidden" name="id" value="<?php echo $id ?>">
@@ -143,7 +153,7 @@
                   </div>
                 </div>
                 
-                <input type="hidden" name="creator" value="3">
+                <input type="hidden" name="creator" value="<?php echo $user_id ?>">
 
                 <div class="card-footer">
                 <?php if($update == true): ?>

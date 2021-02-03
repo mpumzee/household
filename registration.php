@@ -1,3 +1,4 @@
+<?php require_once 'process.php'; ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,6 +20,7 @@
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
 <body class="hold-transition register-page">
+
 <div class="register-box">
   <div class="register-logo">
   <a href="../../index2.html"><b>House</b>Hold</a>
@@ -30,7 +32,7 @@
 
       <form action="process.php" method="post">
         <div class="input-group mb-3">
-          <input type="text" name="fullname" class="form-control form-control-lg" placeholder="Full name">
+          <input type="text" required name="fullname" class="form-control form-control-lg" placeholder="Full name">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-user"></span>
@@ -38,7 +40,7 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="email" name="email" class="form-control form-control-lg" placeholder="Email">
+          <input type="email" required name="email" class="form-control form-control-lg" placeholder="Email">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
@@ -46,7 +48,7 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" name="password" class="form-control form-control-lg" placeholder="Password">
+          <input type="password" required name="password" class="form-control form-control-lg" placeholder="Password">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -54,7 +56,7 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" name="confirm_password" class="form-control form-control-lg" placeholder="Retype password">
+          <input type="password" required name="confirm_password" class="form-control form-control-lg" placeholder="Retype password">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
