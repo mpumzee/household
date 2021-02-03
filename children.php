@@ -103,38 +103,54 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <?php require_once 'process.php'; ?>
-              <?php if(isset($_SESSION['message'])): ?>
-                <div class="alert alert-<? $_SESSION['msg_type']?>">
+              <?php require_once 'process.php'; ?> 
+              <?php if (isset($_GET['edit'])) {
+                $id = $_GET['edit'];    
+                $result = $mysqli->query("SELECT * FROM children WHERE id = $id") or die($mysqli->error);    
+                $row = $result->fetch_array();
+                $firstname = $row['firstname'];
+                $lastname = $row['lastname'];
+                $dob = $row['dob'];
+                $update = true;    
+}?>  
+              <!-- <div class="w-75 mt-1 mx-auto alert alert-success">test</div>            -->
+              <?php if(isset($_SESSION['message'])): ?>              
+                <div class=" mt-1 w-75 mx-auto alert alert-<?=$_SESSION['msg_type']?>">
                   <?php 
                     echo $_SESSION['message'];
                     unset($_SESSION['message']);
                   ?>
                 </div>
+                <?php endif ?>
               <?php 
                 $mysqli = new mysqli('localhost', 'root', '', 'household') or die(mysqli_error($mysqli));
                 $result = $mysqli->query("SELECT * FROM children WHERE children.creator = 3 AND children.active = 1") or die($mysqli->error);
               ?>
               <form role="form" action="" method="POST">
+              <input type="hidden" name="id" value="<?php echo $id ?>">
                 <div class="card-body">
                   <div class="form-group">
                     <label for="firstname">First name</label>
-                    <input type="text" class="form-control" name="firstname" placeholder="eg John">
+                    <input type="text" required class="form-control" name="firstname" placeholder="eg John" value="<?php echo $firstname ?>">
                   </div>
                   <div class="form-group">
                     <label for="lastname">Last name</label>
-                    <input type="text" class="form-control" name="lastname" placeholder="eg Smith">
+                    <input type="text" required class="form-control" name="lastname" placeholder="eg Smith" value="<?php echo $lastname ?>">
                   </div>
                   <div class="form-group">
                     <label for="dob">Date of Birth</label>
-                    <input type="date" class="form-control" name="dob">
+                    <input type="date" required class="form-control" name="dob" value="<?php echo $dob ?>">
                   </div>
                 </div>
                 
                 <input type="hidden" name="creator" value="3">
 
                 <div class="card-footer">
+                <?php if($update == true): ?>
+                  <button type="submit" name="update" class="btn btn-info">Update</button>
+                <?php else: ?>
                   <button type="submit" name="save" class="btn btn-primary">Submit</button>
+                  <?php endif ?>
                 </div>
               </form>
             </div>
@@ -178,7 +194,7 @@
                       <td><?php echo $row['firstname'] ?></td>
                       <td><?php echo $row['lastname'] ?></td>
                       <td><?php echo $row['dob'] ?></td>                      
-                      <td class="text-center"><a href="process.php?edit=<?php echo $row['id'] ?>" class="fas fa-edit text-info crud-btn"></a></td>
+                      <td class="text-center"><a href="children.php?edit=<?php echo $row['id'] ?>" class="fas fa-edit text-info crud-btn"></a></td>
                       <td class="text-center"><a href="process.php?delete=<?php echo $row['id'] ?>" class="fas fa-trash-alt text-danger crud-btn"></a></td>                      
                     </tr>
                     <?php endwhile; ?>                    
